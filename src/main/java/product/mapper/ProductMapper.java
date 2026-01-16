@@ -1,14 +1,14 @@
-package customer.mapper;
+package product.mapper;
 
-import customer.entity.CustomerEntity;
+import product.entity.ProductEntity;
 import org.mapstruct.*;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.JAKARTA, // Usa la constante para mayor seguridad
         injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
-public interface CustomerMapper {
+public interface ProductMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateEntityFromDto(CustomerEntity dto, @MappingTarget CustomerEntity entity);
+    void updateEntityFromDto(ProductEntity dto, @MappingTarget ProductEntity entity);
 }
