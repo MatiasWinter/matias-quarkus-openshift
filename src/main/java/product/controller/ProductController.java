@@ -27,13 +27,13 @@ public class ProductController {
 
     @GET
     @Path("/{id}")
-    public ProductEntity findCustomerById(@PathParam("id") Long id){
+    public ProductEntity findProductById(@PathParam("id") Long id){
         return productRepository.findById(id);
     }
 
     @POST
     @Transactional
-    public ProductEntity createCustomer(ProductEntity customerEntity){
+    public ProductEntity createProduct(ProductEntity customerEntity){
         productRepository.persist(customerEntity);
         return customerEntity;
     }
@@ -41,12 +41,10 @@ public class ProductController {
     @PATCH
     @Transactional
     @Path("/{id}")
-    public ProductEntity updateCustomer(@PathParam("id") Long id, ProductEntity customerEntity){
-        ProductEntity newCustomerEntity = productRepository.findById(id);
-        productMapper.updateEntityFromDto(customerEntity, newCustomerEntity);
-        productRepository.persist(newCustomerEntity);
-        return newCustomerEntity;
+    public ProductEntity updateProduct(@PathParam("id") Long id, ProductEntity productEntity){
+        ProductEntity newProductEntity = productRepository.findById(id);
+        productMapper.updateEntityFromDto(productEntity, newProductEntity);
+        productRepository.persist(newProductEntity);
+        return newProductEntity;
     }
-
-
 }
