@@ -56,3 +56,7 @@ If you want to learn more about building native executables, please consult <htt
 ## Related Guides
 
 - JDBC Driver - H2 ([guide](https://quarkus.io/guides/datasource)): Connect to the H2 database via JDBC
+
+## To implement the infrastructure run
+
+- oc apply -f kubernetes/
