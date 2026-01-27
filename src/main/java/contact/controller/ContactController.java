@@ -64,7 +64,7 @@ public class ContactController {
     }
 
     @GET
-    @Path("search")
+    @Path("/search")
     public Response searchContactByEmail(@QueryParam("email") String email) {
         ContactEntity contact = contactRepository.find("email",email).firstResult();
         return Response.ok(contact).build();
