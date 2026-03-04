@@ -1,72 +1,54 @@
 package contact.controller;
 
-import contact.entity.ContactEntity;
-import contact.mapper.ContactMapper;
-import contact.repository.ContactRepository;
+import contact.DTO.ContactDTO;
+import contact.service.ContactService;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-
-import java.util.List;
 
 @Path("/api/contact")
 public class ContactController {
 
     @Inject
-    ContactRepository contactRepository;
-
-    @Inject
-    ContactMapper contactMapper;
+    ContactService contactService;
 
     @POST
-    @Transactional
-    public Response createContact(ContactEntity contact) {
-        contactRepository.persist(contact);
-        return Response.status(Response.Status.CREATED).entity(contact).build();
+    public Response createContact(@Valid ContactDTO contact) {
+        return contactService.createContact(contact);
     }
 
     @GET
-    public List<ContactEntity> getAllContacts(){
-        return contactRepository.findAll().list();
+    public Response getAllContacts(){
+        return contactService.getAllContacts();
     }
 
     @GET
     @Path("/{id}")
     public Response getContactById(@PathParam("id") Long id) {
-        ContactEntity contact = contactRepository.findById(id);
-        if (contact == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(contact).build();
+        return contactService.getContactById(id);
     }
 
     @PATCH
     @Path("/{id}")
-    @Transactional
-    public ContactEntity updateContact(@PathParam("id") Long id, ContactEntity contactEntity) {
-        ContactEntity newContactEntity = contactRepository.findById(id);
-        contactMapper.updateEntityFromDto(contactEntity, newContactEntity);
-        contactRepository.persist(newContactEntity);
-        return newContactEntity;
+    public Response updateContact(@PathParam("id") Long id, ContactDTO contactDTO) {
+        return contactService.updateContact(id,contactDTO);
     }
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     public Response deleteContact(@PathParam("id") Long id) {
-        ContactEntity contact = contactRepository.findById(id);
-        if (contact == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        contactRepository.delete(contact);
-        return Response.ok().build();
+        return contactService.deleteContact(id);
     }
 
     @GET
     @Path("/search")
-    public Response searchContactByEmail(@QueryParam("email") String email) {
-        ContactEntity contact = contactRepository.find("email",email).firstResult();
-        return Response.ok(contact).build();
+    public Response searchContactByEmail(@QueryParam("email")
+    @NotEmpty(message = "El email no puede estar vacío")
+    @Email(message = "Debe proporcionar un formato de email válido")
+                                             String email) {
+        return contactService.searchContactByEmail(email);
     }
 }

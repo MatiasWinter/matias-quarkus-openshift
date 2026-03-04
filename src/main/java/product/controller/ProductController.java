@@ -1,50 +1,42 @@
 package product.controller;
-import product.entity.ProductEntity;
-import product.mapper.ProductMapper;
-import product.repository.ProductRepository;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.ws.rs.core.Response;
+import product.DTO.ProductDTO;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-
-import java.util.List;
+import product.service.ProductService;
 
 @Path("/api/product")
 public class ProductController {
-    @Inject
-    ProductRepository productRepository;
 
     @Inject
-    ProductMapper productMapper;
+    ProductService productService;
 
     @GET
-    public List<ProductEntity> findAll(){
-        return productRepository.findAll().list();
+    public Response findAll(){
+        return productService.findAll();
     }
 
     @GET
     @Path("/{id}")
-    public ProductEntity findProductById(@PathParam("id") Long id){
-        return productRepository.findById(id);
+    public Response findProductById(@PathParam("id") Long id){
+        return productService.findProductById(id);
     }
 
     @POST
-    @Transactional
-    public ProductEntity createProduct(ProductEntity customerEntity){
-        productRepository.persist(customerEntity);
-        return customerEntity;
+    public Response createProduct(@Valid ProductDTO product){
+        return productService.createProduct(product);
     }
 
     @PATCH
-    @Transactional
     @Path("/{id}")
-    public ProductEntity updateProduct(@PathParam("id") Long id, ProductEntity productEntity){
-        ProductEntity newProductEntity = productRepository.findById(id);
-        productMapper.updateEntityFromDto(productEntity, newProductEntity);
-        productRepository.persist(newProductEntity);
-        return newProductEntity;
+    public Response updateProduct(@PathParam("id") Long id, ProductDTO product){
+        return productService.updateProduct(id,product);
     }
 }
